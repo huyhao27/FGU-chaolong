@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using static SceneController;
 
 public class CoinCollect : MonoBehaviour
 {
@@ -24,6 +25,12 @@ public class CoinCollect : MonoBehaviour
             scoreText.text = "Score: " + score;
             Destroy(other.gameObject);
             Destroy(gameObject);
+            // Reload the scene
+            SceneController sceneController = FindObjectOfType<SceneController>();
+            if (sceneController != null)
+            {
+                sceneController.LoadScene("GameOver");
+            }
         }
     }
 }
