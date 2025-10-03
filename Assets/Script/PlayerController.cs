@@ -9,8 +9,9 @@ public class PlayerController : MonoBehaviour
 
     private Rigidbody2D rb;
 
+    private bool _isJumping;
     private Vector2 movement;
-    
+
     private Animator animator;
     void Start()
     {
@@ -20,20 +21,35 @@ public class PlayerController : MonoBehaviour
     float playerX, playerY;
     void Update()
     {
-      
-        movement.x = Input.GetAxisRaw("Horizontal");
-        transform.localEulerAngles = new Vector3(0, movement.x < 0 ? 0 : 180, 0);
+
+        movement.x = Input.GetAxis("Horizontal");
+        if (movement.x != 0f)
+        {
+            rb.velocity = new Vector2(movement.x * speed, rb.velocity.y);
+            transform.localEulerAngles = new Vector3(0f, movement.x < 0f ? 0f : 180f, 0f);
+        }
         // movement.y = Input.GetAxisRaw("Vertical");
         //flip
-        
+
         // playerX = Input.GetAxisRaw("Horizontal");
         // playerY = Input.GetAxisRaw("Vertical");
         // movement.Normalize();
-        rb.MovePosition(rb.position + movement * (speed * Time.deltaTime));
-        animator.SetBool("isMove", movement.x!=0);
+        animator.SetBool("isMove", movement.x != 0f);
         // animator.SetFloat("Vertical", movement.y!=);
-        
-        
+        JumpHandling();
+
+    }
+
+    private void JumpHandling()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (_isJumping) return;
+
+            animator.SetBool("isJumping", rb.velocity.y != 0);
+            rb.velocity = new Vector2(rb.velocity.x, speed);
+            _isJumping = true;
+        }
     }
 
     // private void FixedUpdate()
@@ -42,4 +58,12 @@ public class PlayerController : MonoBehaviour
     //     playerY = transform.position.y;
     //     Debug.Log("playerX: " + playerX + " playerY: " + playerY);
     // }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            _isJumping = false;
+        }
+    }
 }
