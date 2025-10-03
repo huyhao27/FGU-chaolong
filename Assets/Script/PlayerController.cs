@@ -35,6 +35,7 @@ public class PlayerController : MonoBehaviour
         // playerY = Input.GetAxisRaw("Vertical");
         // movement.Normalize();
         animator.SetBool("isMove", movement.x != 0f);
+
         // animator.SetFloat("Vertical", movement.y!=);
         JumpHandling();
 
@@ -45,8 +46,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
             if (_isJumping) return;
-
-            animator.SetBool("isJumping", rb.velocity.y != 0);
+            animator.SetBool("isJumping", true);
             rb.velocity = new Vector2(rb.velocity.x, speed);
             _isJumping = true;
         }
@@ -63,6 +63,7 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Ground"))
         {
+             animator.SetBool("isJumping", false);
             _isJumping = false;
         }
     }
